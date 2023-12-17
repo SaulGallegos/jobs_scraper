@@ -1,0 +1,6 @@
+/venv
+.env
+/__pycache__/
+/datasets/
+logs.csv
+occ_jobs_url.json
