@@ -63,7 +63,7 @@ def get_pdf_from_url(driver, url):
     return pdf
 
 
-class OccScrapper:
+class OccScraper:
     def __init__(self):
         self.driver = initialized_driver()
         self.driver.get(BASE_URL)

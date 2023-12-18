@@ -1,5 +1,5 @@
 
-from occScrapper import OccScrapper
+from occScraper import OccScraper
 import os
 
 
@@ -22,7 +22,7 @@ def initialize_dirs():
 if __name__ == "__main__":
     initialize_dirs()
 
-    occ_scrapper = OccScrapper()
-    # occ_scrapper.save_all_jobs_url()
-    occ_scrapper.get_all_jobs_information('occ_jobs_url.json')
-    occ_scrapper.close_driver()
+    occ_scraper = OccScraper()
+    # occ_scraper.save_all_jobs_url()
+    occ_scraper.get_all_jobs_information('occ_jobs_url.json')
+    occ_scraper.close_driver()
