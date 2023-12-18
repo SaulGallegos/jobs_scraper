@@ -17,12 +17,15 @@ def initialize_dirs():
     if not os.path.exists('logs.csv'):
         with open('logs.csv', 'w') as file:
             file.write('id, platform, date, text_path, html_path, pdf_path\n')
+    if not os.path.exists('occ_jobs_url.json'):
+        with open('occ_jobs_url.json', 'w') as file:
+            file.write('[]')
 
 
 if __name__ == "__main__":
     initialize_dirs()
 
     occ_scraper = OccScraper()
-    # occ_scraper.save_all_jobs_url()
+    occ_scraper.save_all_jobs_url()
     occ_scraper.get_all_jobs_information('occ_jobs_url.json')
     occ_scraper.close_driver()
