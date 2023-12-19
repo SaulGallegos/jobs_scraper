@@ -1,3 +1,4 @@
+from logs import insert_log, is_job_in_log
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -114,18 +115,6 @@ class OccScraper:
         for base_index in range(len(BASE_URLS)):
             self.get_jobs_url(base_index)
 
-    def insert_log(self, job_log_info):
-        with open('logs.csv', 'a') as file:
-            file.write(
-                f'{job_log_info["id"]}, {job_log_info["platform"]}, {job_log_info["date"]}, {job_log_info["txt_path"]}, {job_log_info["html_path"]}, {job_log_info["pdf_path"]}\n')
-
-    def is_job_in_log(self, job_id):
-        with open('logs.csv', 'r') as file:
-            for line in file:
-                if job_id in line:
-                    return True
-        return False
-
     def get_all_jobs_information(self, path):
         jobs_list = []
         with open(path, 'r') as json_file:
@@ -147,7 +136,7 @@ class OccScraper:
             else:
                 print("Pattern not found")
 
-            if not self.is_job_in_log(job_log_info['id']):
+            if not is_job_in_log(job_log_info['id']):
                 html = self.driver.page_source
                 html_path = f'datasets/occ/html/{job_log_info["id"]}.html'
                 with open(html_path, 'w') as html_file:
@@ -164,7 +153,7 @@ class OccScraper:
                 pdf_path = self.save_pdf(pdf, job_log_info['id'])
                 job_log_info['pdf_path'] = pdf_path
 
-                self.insert_log(job_log_info)
+                insert_log(job_log_info)
                 print(f'Saved job: {job_log_info["id"]}')
 
     def close_driver(self):
