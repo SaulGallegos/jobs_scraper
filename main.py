@@ -1,6 +1,7 @@
 
-import occScraper
 import indeedScraper
+import jaliscoTrabajaScraper
+import occScraper
 import os
 
 
@@ -19,6 +20,10 @@ def initialize_dirs():
     create_dir('datasets/indeed/text')
     create_dir('datasets/indeed/html')
     create_dir('datasets/indeed/pdf')
+    create_dir('datasets/jaliscotrabaja')
+    create_dir('datasets/jaliscotrabaja/text')
+    create_dir('datasets/jaliscotrabaja/html')
+    create_dir('datasets/jaliscotrabaja/pdf')
     if not os.path.exists('logs.csv'):
         with open('logs.csv', 'w') as file:
             file.write('id, platform, date, text_path, html_path, pdf_path\n')
@@ -44,8 +49,15 @@ def start_indeed_scraper():
     scraper.close_driver()
 
 
+def start_jalisco_trabaja_scraper():
+    scraper = jaliscoTrabajaScraper.JaliscoTrabajaScraper()
+    scraper.scrape_all_jobs()
+    scraper.close_driver()
+
+
 if __name__ == "__main__":
     initialize_dirs()
 
     # start_occ_scraper()
     # start_indeed_scraper()
+    # start_jalisco_trabaja_scraper()
