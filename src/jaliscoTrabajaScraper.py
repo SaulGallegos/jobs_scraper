@@ -1,58 +1,12 @@
-from logs import insert_log, is_job_in_log
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-import base64
-import json
+from src.utils.dirs import get_pdf_from_url, save_pdf
+from src.utils.initial_driver import initialized_driver
+from src.utils.logs import insert_log, is_job_in_log
 import time
 
 NUMBER_OF_JOBS = 7063
-
-
-def initialized_driver():
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--disable-gpu')
-    # chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--window-size=1920x1080')
-
-    prefs = {
-        'printing.print_preview_sticky_settings.appState': json.dumps({
-            'recentDestinations': [{
-                'id': 'Save as PDF',
-                'origin': 'local',
-                'account': '',
-            }],
-            'selectedDestinationId': 'Save as PDF',
-            'version': 2,
-            'isCssBackgroundEnabled': True,
-            'isHeaderFooterEnabled': False,
-        })
-    }
-    chrome_options.add_experimental_option('prefs', prefs)
-    chrome_options.add_argument('--kiosk-printing')
-
-    service = Service('/usr/local/bin/chromedriver')
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    return driver
-
-
-def get_pdf_from_url(driver, url):
-    driver.get(url)
-
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.TAG_NAME, "body"))
-    )
-
-    pdf = driver.execute_cdp_cmd("Page.printToPDF", {
-        "landscape": False,
-        "printBackground": True,
-        "pageSize": "A4"
-    })
-
-    return pdf
 
 
 class JaliscoTrabajaScraper:
@@ -60,12 +14,6 @@ class JaliscoTrabajaScraper:
         self.driver = initialized_driver()
         self.driver.get(
             'https://www.jaliscotrabaja.com.mx')
-
-    def save_pdf(self, pdf, id):
-        file_path = f'datasets/jaliscotrabaja/pdf/{id}.pdf'
-        with open(file_path, "wb") as file:
-            file.write(base64.b64decode(pdf['data']))
-        return file_path
 
     def login(self):
         open_modal_button = self.driver.find_element(
@@ -116,8 +64,10 @@ class JaliscoTrabajaScraper:
 
             pdf = get_pdf_from_url(
                 self.driver, 'https://www.jaliscotrabaja.com.mx/candidato/includes/bolsa_trabajo/data-bolsa_trabajo_vacante_info.php?idvacante=' + str(job_id))
-            job_log_info['pdf_path'] = self.save_pdf(pdf, job_log_info['id'])
+            job_log_info['pdf_path'] = save_pdf(
+                pdf, job_log_info['id'], 'jaliscotrabaja')
 
+            print('Job saved: ' + str(job_id))
             insert_log(job_log_info)
 
     def scrape_all_jobs(self):
