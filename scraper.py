@@ -5,9 +5,9 @@ from src.jaliscoTrabajaScraper import JaliscoTrabajaScraper
 
 def start_occ_scraper():
     scraper = OccScraper()
-    # scraper.save_all_jobs_url()
-    scraper.get_all_jobs_information('datasets/occ_jobs_url.json')
-    scraper.close_driver()
+    scraper.save_all_jobs_url()
+    # scraper.get_all_jobs_information('datasets/occ_jobs_url.json')
+    # scraper.close_driver()
 
 
 def start_indeed_scraper():

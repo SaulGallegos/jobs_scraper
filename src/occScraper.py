@@ -1,8 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from src.utils.dirs import get_pdf_from_url, save_pdf
-from src.utils.initial_driver import initialized_driver
-from src.utils.logs import insert_log, is_job_in_log
+from .utils.dirs import get_pdf_from_url, save_pdf
+from .utils.initial_driver import initialized_driver
+from .utils.logs import insert_log, is_job_in_log
 import json
 import re
 import time
@@ -34,6 +34,7 @@ def get_job_information(driver):
 
 class OccScraper:
     def __init__(self):
+        print("Initializing OCC scraper")
         self.driver = initialized_driver()
         self.driver.get(BASE_URLS[0])
 
